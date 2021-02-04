@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+    <style>
+        input[type=text] {
+            width: 500px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="app">
+    <header>
+        <input type="text" v-model:value="url">
+        <button @click="connect">连接</button>
+        <button @click="close">断开</button>
+        <button @click="clear">清屏</button>
+    </header>
+    <main>
+        <pre>{{history}}</pre>
+    </main>
+    <footer>
+        <form @submit.prevent="send">
+            <input type="text" v-model:value="message">
+            <input type="submit" value="发送">
+        </form>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            url: 'ws://127.0.0.1:8080/chat/{userId}/{key}',
+            ws: null,
+            history: '',
+            message: '',
+        },
+        methods: {
+            connect: function () {
+                if (this.ws != null) {
+                    this.close()
+                }
+
+                this.ws = new WebSocket(this.url)
+                this.ws.onopen = () => {
+                    this.history += '\n======== 新连接 ========\n';
+                }
+                this.ws.onmessage = e => {
+                    this.history += `<-- ${e.data}\n`;
+                }
+                this.ws.onclose = () => {
+                    this.history += '!!! 连接已关闭。\n';
+                }
+                this.ws.onerror = e => {
+                    this.history += `!!! ${e.data}\n`
+                }
+            },
+            send: function () {
+                if (this.ws === null) return;
+                this.history += `--> ${this.message}\n`;
+                this.ws.send(this.message);
+                this.message = '';
+            },
+            close: function () {
+                if (this.ws === null) return;
+                this.ws.close();
+                this.ws = null;
+            },
+            clear: function () {
+                this.history = '';
+            },
+        },
+    })
+</script>
+</body>
+</html>

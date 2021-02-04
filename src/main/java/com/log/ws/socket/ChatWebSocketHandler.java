@@ -51,6 +51,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         chatMessage.setUserId(sessionContext.getUserId());
         logger.info("[" + sid + "] " + chatMessage);
 
+        // TODO: 鉴权...
         // TODO: 存储聊天信息到数据库...
 
         // 广播聊天信息
