@@ -26,7 +26,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(chatWebSocketHandler, PATH_CHAT)
-                .setAllowedOrigins("http://coolaf.com");
+                .setAllowedOrigins("*");
     }
 
 }

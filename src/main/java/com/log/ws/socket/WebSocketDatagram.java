@@ -1,9 +1,9 @@
 package com.log.ws.socket;
 
 /**
- * WebSocket传输包
+ * WebSocket数据报
  */
-public class WebSocketPacket {
+public class WebSocketDatagram {
     /** 状态码 */
     private int status;
 
@@ -13,14 +13,14 @@ public class WebSocketPacket {
     /** 数据 */
     private Object data;
 
-    public WebSocketPacket() {
+    public WebSocketDatagram() {
     }
 
-    public WebSocketPacket(Object data) {
+    public WebSocketDatagram(Object data) {
         this.data = data;
     }
 
-    public WebSocketPacket(int status, String error) {
+    public WebSocketDatagram(int status, String error) {
         this.status = status;
         this.error = error;
     }

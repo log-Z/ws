@@ -46,21 +46,21 @@
 
                 this.ws = new WebSocket(this.url)
                 this.ws.onopen = () => {
-                    this.history += '\n======== 新连接 ========\n';
+                    this.history += `\n======== 新连接 ========\n${this.url}\n`;
                 }
                 this.ws.onmessage = e => {
-                    this.history += `<-- ${e.data}\n`;
+                    this.history += `${this.now()} <-- ${e.data}\n`;
                 }
                 this.ws.onclose = () => {
-                    this.history += '!!! 连接已关闭。\n';
+                    this.history += `${this.now()} !!! 连接已关闭。\n`;
                 }
                 this.ws.onerror = e => {
-                    this.history += `!!! ${e.data}\n`
+                    this.history += `${this.now()} !!! ${e.data}\n`
                 }
             },
             send: function () {
                 if (this.ws === null) return;
-                this.history += `--> ${this.message}\n`;
+                this.history += `${this.now()} --> ${this.message}\n`;
                 this.ws.send(this.message);
                 this.message = '';
             },
@@ -71,6 +71,11 @@
             },
             clear: function () {
                 this.history = '';
+            },
+            now: function () {
+                let d = new Date();
+                let fillZero = (num, len = 2) => ('' + (num + Math.pow(10, len))).substr(1);
+                return `${fillZero(d.getHours())}:${fillZero(d.getMinutes())}:${fillZero(d.getSeconds())}:${fillZero(d.getMilliseconds(), 3)}`;
             },
         },
     })

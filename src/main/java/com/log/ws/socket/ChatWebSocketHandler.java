@@ -70,13 +70,17 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         // 绑定用户ID
         SessionContext sessionContext = new SessionContext(session, pathVariables.get("userId"));
         // 并注册入池
-        sessionPool.put(session.getId(), sessionContext);
+        String sid = session.getId();
+        sessionPool.put(sid, sessionContext);
+        logger.info("[" + sid + "] WebSocket connected. pathVariables is " + pathVariables);
     }
 
     /** WebSocket连接关闭后 */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        sessionPool.remove(session.getId());
+        String sid = session.getId();
+        sessionPool.remove(sid);
+        logger.info("[" + sid + "] WebSocket closed");
     }
 
     /**
@@ -108,8 +112,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     private TextMessage textMessage(ChatMessage chatMessage) {
         String payload = "";
         try {
-            WebSocketPacket res = new WebSocketPacket(chatMessage);
-            payload = objectMapper.writeValueAsString(res);
+            WebSocketDatagram datagram = new WebSocketDatagram(chatMessage);
+            payload = objectMapper.writeValueAsString(datagram);
         } catch (JsonProcessingException e) {
             logger.error(e);
         }
